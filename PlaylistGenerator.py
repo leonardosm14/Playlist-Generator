@@ -90,9 +90,9 @@ class Aplicativo:
 
         #Caso altere o projeto, é necessário preencher seus próprios dados de client_id, secret e uri:
         #Estes dados podem ser criados no site Spotify Developer
-        client_id = '3b74244b35864669ac69390f44265c73'
-        client_secret = '3c525c267d02470188f562f3c2d85300'
-        redirect_uri = 'http://localhost:8888/callback'
+        client_id = 'SEU-CLIENT-ID'
+        client_secret = 'SEU-CLIENT-SECRET'
+        redirect_uri = 'SEU-LOCAL-HOST'
 
         credentials = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri)
 
@@ -114,7 +114,7 @@ class Aplicativo:
 
             #Criação da Playlist
             #OBS: É necessário preencher com seu próprio usuário do Spotify.
-            playlist = sp.user_playlist_create(user='igciiwlypxqzz8k05ns5ydiej', name=playlist_name)
+            playlist = sp.user_playlist_create(user='SEU-USERNAME', name=playlist_name)
 
             #Lógica de busca pelos artistas no Spotify (seleciona o primeiro compatível com o nome digitado)
             for artist_name in artists:
