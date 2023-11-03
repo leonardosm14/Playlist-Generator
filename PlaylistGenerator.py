@@ -1,8 +1,8 @@
 #Projeto Playlist Generator - Trabalho Final
-#Criado por Leonardo de Sousa Marques
+#Criado por Leonardo de Sousa Marques - Matrícula 23202501
 #Disciplina: Programação Orientada a Objetos I
 
-#Bibliotecas: tkinter (interface gráfica), spotipy (verificação e validação do Spotify), random e webbrowser (Web)
+#Bibliotecas: tkinter (interface gráfica), spotipy (verificação e validação do Spotify), random e webbrowser
 import tkinter as tk
 from tkinter import *
 from tkinter import font
@@ -23,7 +23,6 @@ class Aplicativo:
         self.artists = None
         self.num_songs = None
         self.playlist_name = None
-        self.validate_token = None
         self.playlist_url = None
         self.initial_frame()
 
@@ -59,19 +58,22 @@ class Aplicativo:
         entry_frame.pack()
 
         #Campo - Artists
-        self.artists_label = Label(entry_frame, text="Artists/Bands (max. 50):", font=self.Poppins, bg="#222222", fg="white")
+        self.artists_label = Label(entry_frame, text="Artists/Bands (max. 50):", font=self.Poppins, 
+                                bg="#222222", fg="white")
         self.artists_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
         self.artists_entry = Entry(entry_frame, font=self.Poppins, bg="#4E4E4E")
         self.artists_entry.grid(row=2, column=0, padx=5, pady=12, sticky="ew")
 
         #Campo - Num of Songs
-        self.num_songs_label = Label(entry_frame, text="Number of Songs (max. 100):", font=self.Poppins, bg="#222222", fg="white")
+        self.num_songs_label = Label(entry_frame, text="Number of Songs (max. 100):", font=self.Poppins, 
+                                     bg="#222222", fg="white")
         self.num_songs_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
         self.num_songs_entry = Entry(entry_frame, font=self.Poppins, bg="#4E4E4E")
         self.num_songs_entry.grid(row=4, column=0, padx=5, pady=12, sticky="ew")
 
         #Campo - Playlist Name
-        self.playlist_name_label = Label(entry_frame, text="Playlist Name:", font=self.Poppins, bg="#222222", fg="white")
+        self.playlist_name_label = Label(entry_frame, text="Playlist Name:", font=self.Poppins, 
+                                         bg="#222222", fg="white")
         self.playlist_name_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
         self.playlist_name_entry = Entry(entry_frame, font=self.Poppins, bg="#4E4E4E", width=30)
         self.playlist_name_entry.grid(row=6, column=0, padx=5, pady=12, sticky="ew")
@@ -88,9 +90,9 @@ class Aplicativo:
 
         #Caso altere o projeto, é necessário preencher seus próprios dados de client_id, secret e uri:
         #Estes dados podem ser criados no site Spotify Developer
-        client_id = 'SEU-CLIENT-ID'
-        client_secret = 'SEU-CLIENT-SECRET'
-        redirect_uri = 'SEU-LOCAL-HOST'
+        client_id = '3b74244b35864669ac69390f44265c73'
+        client_secret = '3c525c267d02470188f562f3c2d85300'
+        redirect_uri = 'http://localhost:8888/callback'
 
         credentials = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri)
 
@@ -112,7 +114,7 @@ class Aplicativo:
 
             #Criação da Playlist
             #OBS: É necessário preencher com seu próprio usuário do Spotify.
-            playlist = sp.user_playlist_create(user='SEU-USUÁRIO-SPOTIFY', name=playlist_name)
+            playlist = sp.user_playlist_create(user='igciiwlypxqzz8k05ns5ydiej', name=playlist_name)
 
             #Lógica de busca pelos artistas no Spotify (seleciona o primeiro compatível com o nome digitado)
             for artist_name in artists:
@@ -120,29 +122,29 @@ class Aplicativo:
                 artist_uri = results['artists']['items'][0]['uri']
 
                 #Vetor com todas as músicas do artista
-                all_tracks = []
+                tracks = []
 
                 #Todos os albums do artista:
                 albums = sp.artist_albums(artist_uri, album_type='album')
 
-                #Adiciona-se cada faixa de cada album na lista all_trakcs:
+                #Adiciona-se cada faixa de cada album na lista trakcs:
                 for album in albums['items']:
                     album_tracks = sp.album_tracks(album['id'])
-                    all_tracks.extend(track['uri'] for track in album_tracks['items'])
+                    tracks.extend(track['uri'] for track in album_tracks['items'])
 
                 #Embaralhamento para que a ordem seja aleatória
-                random.shuffle(all_tracks)
+                random.shuffle(tracks)
 
-                #Caso o resto seja diferente de 0, serão adicionadas mais músicas aos primeiros artistas
+                #Caso o resto seja diferente de 0, serão adicionadas mais músicas aos primeiros artistas/bandas
                 additional = 0
                 if remainder > 0:
                     additional = 1
                     remainder -= 1
 
                 if additional > 0:
-                    sp.playlist_add_items(playlist['id'], all_tracks[:songs_per_artist + additional])
+                    sp.playlist_add_items(playlist['id'], tracks[:songs_per_artist + additional])
                 else:
-                    sp.playlist_add_items(playlist['id'], all_tracks[:songs_per_artist])
+                    sp.playlist_add_items(playlist['id'], tracks[:songs_per_artist])
 
             #Link da Playlist:
             self.playlist_url = f"https://open.spotify.com/playlist/{playlist['id']}"
